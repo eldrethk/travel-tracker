@@ -22,8 +22,8 @@
     else
     {
         <!-- Summary Stats -->
-        <div class="row mb-4">
-            <div class="col-md-3 col-6">
+        <div class="row">
+            <div class="col-md-3 col-6 mb-4">
                 <div class="card text-center">
                     <div class="card-body">
                         <h3 class="text-primary">@Model.Count</h3>
@@ -31,7 +31,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 col-6">
+            <div class="col-md-3 col-6 mb-4">
                 <div class="card text-center">
                     <div class="card-body">
                         <h3 class="text-success">@Model.Sum(t => t.ExpenseSummary.TotalAmount).ToString("C")</h3>
@@ -39,7 +39,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 col-6">
+            <div class="col-md-3 col-6 mb-4">
                 <div class="card text-center">
                     <div class="card-body">
                         <h3 class="text-info">@Model.Sum(t => t.ExpenseSummary.TotalExpenses)</h3>
@@ -47,7 +47,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 col-6">
+            <div class="col-md-3 col-6 mb-4">
                 <div class="card text-center">
                     <div class="card-body">
                         <h3 class="text-secondary">@(Model.Average(t => t.ExpenseSummary.TotalAmount).ToString("C"))</h3>
@@ -63,12 +63,10 @@
                 <h5 class="mb-0 text-white">Trip List</h5>
             </div>
             <div class="table-responsive">
-                <table class="table table-hover mb-0">
+                <table class="table mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th>Trip Name</th>
-                            <th>Destination</th>
-                            <th>Dates</th>
+                            <th>Trip</th>                      
                             <th>Duration</th>
                             <th class="text-center">Expenses</th>
                             <th class="text-end">Total Amount</th>                            
@@ -83,25 +81,12 @@
                             var duration = (trip.EndDate - trip.StartDate).Days + 1;
                             var dailyAverage = duration > 0 ? summary.TotalAmount / duration : 0;
 
-                            <tr>
+                            <tr class="border-white" >
                                 <td>
                                     <div>
-                                        <strong>@trip.Name</strong>
-                                        @if (!string.IsNullOrEmpty(trip.Description))
-                                        {
-                                            <br>
-
-                                            <small class="text-muted">@trip.Description</small>
-                                        }
+                                        <strong>@trip.Name</strong>                                   
                                     </div>
-                                </td>
-                                <td>@(trip.Destination ?? "—")</td>
-                                <td>
-                                    <div>
-                                        @trip.StartDate.ToString("MMM dd")
-                                        <br><small class="text-muted">to @trip.EndDate.ToString("MMM dd, yyyy")</small>
-                                    </div>
-                                </td>
+                                </td>                              
                                 <td>
                                     <span class="badge bg-secondary">@duration days</span>
                                 </td>
@@ -149,6 +134,27 @@
                                             </ul>
                                         </div>
                                     </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="5">
+                                    <p class="text-muted mb-0">
+                                     
+                                        @trip.StartDate.ToString("MMM dd") to @trip.EndDate.ToString("MMM dd, yyyy")
+
+                                        @if (!string.IsNullOrEmpty(trip.Destination))
+                                        {
+
+                                            <span> • @trip.Destination</span>
+                                        }
+
+                                        @if (!string.IsNullOrEmpty(trip.Description))
+                                        {
+                                            <br>
+
+                                            <small class="text-muted">@trip.Description</small>
+                                        }
+                                    </p>
                                 </td>
                             </tr>
                         }
