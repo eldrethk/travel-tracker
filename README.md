@@ -59,3 +59,14 @@ This demo shows creating a trip, adding expenses with receipt uploads, and viewi
 - **ExpenseSummary** – Aggregated expense data by category
 
 - **ExpenseCategory** – Enum for expense categorization
+
+  ---
+
+### 📄 License
+Copyright 2025 Karla Cooper  
+All rights reserved.  
+This source code is provided for **viewing purposes only**.  
+You may **not use, copy, modify, merge, publish, distribute, sublicense, or sell** any part of this code, in whole or in part, for any purpose.
+
+No permission is granted to use this code in any software or system, commercial or non-commercial.
+No permission is granted to copy, distribute, or modify this work without explicit written consent.  
