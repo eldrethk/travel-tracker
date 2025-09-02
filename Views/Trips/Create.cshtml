@@ -1,0 +1,123 @@
+﻿@model TravelExpenseTracker.Domain.Trip
+@using TravelExpenseTracker.Domain
+
+@{
+    ViewData["Title"] = "Create Trip";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4 mt-3">
+        <h1>Create New Trip</h1>
+        <a asp-area="" asp-controller="Trips" asp-action="Index" class="btn btn-outline-secondary">Back to Trips</a>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label"></label>
+                    <input asp-for="Name" class="form-control" placeholder="e.g., Business Trip to NYC" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label"></label>
+                    <textarea asp-for="Description" class="form-control" rows="3" placeholder="Describe the purpose and details of your trip"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Destination" class="form-label"></label>
+                    <input asp-for="Destination" class="form-control" placeholder="e.g., New York, NY" />
+                    <span asp-validation-for="Destination" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="StartDate" class="form-label"></label>
+                            <input asp-for="StartDate" type="date" class="form-control" />
+                            <span asp-validation-for="StartDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="EndDate" class="form-label"></label>
+                            <input asp-for="EndDate" type="date" class="form-control" />
+                            <span asp-validation-for="EndDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <button type="submit" class="btn btn-success">Create Trip</button>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="bg-light p-3 rounded">
+                <h5>Trip Planning Tips</h5>
+                <ul class="small">
+                    <li>Choose a descriptive name that will help you identify this trip later</li>
+                    <li>Include key details in the description such as purpose, attendees, or important notes</li>
+                    <li>Be specific with your destination to help organize expenses by location</li>
+                    <li>Double-check your start and end dates</li>
+                </ul>
+
+                <hr class="my-3">
+
+                <h6>What's Next?</h6>
+                <p class="small text-muted mb-0">
+                    After creating your trip, you'll be able to add expenses in categories like accommodation, transportation, meals, and more.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // Set default dates
+        document.addEventListener('DOMContentLoaded', function() {
+            const startDate = document.getElementById('@Html.IdFor(m => m.StartDate)');
+            const endDate = document.getElementById('@Html.IdFor(m => m.EndDate)');
+
+            // Set start date to today if not already set
+            if (!startDate.value) {
+                const today = new Date();
+                startDate.value = today.toISOString().split('T')[0];
+            }
+
+            // Set end date to one week from start date when start date changes
+            startDate.addEventListener('change', function() {
+                if (startDate.value && !endDate.value) {
+                    const start = new Date(startDate.value);
+                    const end = new Date(start);
+                    end.setDate(start.getDate() + 7);
+                    endDate.value = end.toISOString().split('T')[0];
+                }
+            });
+
+            // Validate end date is not before start date
+            endDate.addEventListener('change', function() {
+                if (startDate.value && endDate.value) {
+                    const start = new Date(startDate.value);
+                    const end = new Date(endDate.value);
+
+                    if (end < start) {
+                        alert('End date cannot be before start date.');
+                        endDate.value = '';
+                    }
+                }
+            });
+        });
+    </script>
+}

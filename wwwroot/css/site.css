@@ -1,0 +1,67 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+@media screen and (min-width: 1200px) and (max-width: 1400px){
+    .h6, h6{
+        font-size: .82rem !important;
+    }
+    .badge{
+        font-size: .6em !important;
+    }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+  text-align: start;
+}
+
+/*expense category colors*/
+.bg-accom {
+    --bs-bg-opacity: 1;
+    background-color: #335786 !important;
+    color: #FFF !important;
+}
+.bg-trans {
+    --bs-bg-opacity: 1;
+    background-color: #6F7302 !important;
+    color: #FFF !important;
+}
+.bg-meals {
+    --bs-bg-opacity: 1;
+    background-color: #F29F05 !important;
+    color: #FFF !important;
+}
+.bg-entert {
+    --bs-bg-opacity: 1;
+    background-color: #89738A !important;
+    color: #FFF !important;
+}
+.bg-other {
+    --bs-bg-opacity: 1;
+    background-color: #99B4BF !important;
+    color: #FFF !important;
+}
