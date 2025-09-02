@@ -35,6 +35,7 @@ namespace TravelExpenseTracker.Domain
         [DataType(DataType.Date)]
         [Display(Name = "End Date")]
         [JsonProperty("endDate")]
+        [DateGreaterThan("StartDate", ErrorMessage = "End Date must be greater than Start Date")]
         public DateTime EndDate { get; set; }
 
         [StringLength(100)]
@@ -54,5 +55,31 @@ namespace TravelExpenseTracker.Domain
         [JsonIgnore]
         public decimal TotalExpenses => Expenses?.Sum(e => e.Amount) ?? 0;
 
+    }
+
+    public class DateGreaterThanAttribute : ValidationAttribute
+    {
+        private readonly string _comparisonDate;
+        public DateGreaterThanAttribute(string comparisonDate)
+        {
+            _comparisonDate = comparisonDate;
+        }
+
+        protected override ValidationResult? IsValid(object value, ValidationContext validationContext)
+        {
+            var currentValue = (DateTime)value;
+            var property = validationContext.ObjectType.GetProperty(_comparisonDate);
+
+            if (property == null)
+                throw new ArgumentException("Property not found");
+
+            var comparsionValue = (DateTime)property.GetValue(validationContext.ObjectInstance);
+
+            if (currentValue <= comparsionValue)
+                return new ValidationResult(ErrorMessage);
+
+
+            return ValidationResult.Success;
+        }
     }
 }
