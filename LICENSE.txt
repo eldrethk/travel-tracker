@@ -1,0 +1,11 @@
+Copyright © 2025 Karla Cooper
+All rights reserved.
+
+This source code is provided for viewing purposes only.
+
+You may NOT:
+- Use, copy, modify, merge, publish, distribute, sublicense, or sell any part of this code.
+- Use this code in any software or system, commercial or non-commercial.
+- Include, reuse, or redistribute any portion of this repository.
+
+No permission is granted unless explicit **written consent** is obtained from the copyright holder.
