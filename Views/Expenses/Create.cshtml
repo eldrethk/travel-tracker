@@ -1,0 +1,191 @@
+﻿@model TravelExpenseTracker.Domain.Expense
+@using TravelExpenseTracker.Domain
+
+@{
+    ViewData["Title"] = "Add Expense";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4 mt-3">
+        <h1>Add New Expense</h1>
+        <div>
+            @if (ViewBag.TripId != null)
+            {
+                <a asp-area="" asp-controller="Trips" asp-action="Details" asp-route-id="@ViewBag.TripId" class="btn btn-outline-secondary">Back to Trip</a>
+            }
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                @if (ViewBag.TripId != null)
+                {
+                    <input name="TripId" type="hidden" value="@ViewBag.TripId" />
+                    <div class="alert alert-info h3">
+                        @ViewBag.TripName
+                        <span class="text-dark">(@ViewBag.TripDates)</span>
+                    </div>
+                }
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="mb-3">
+                            <label asp-for="CompanyName" class="form-label"></label>
+                            <input asp-for="CompanyName" class="form-control" placeholder="e.g., Marriott Hotel, Delta Airlines" />
+                            <span asp-validation-for="CompanyName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label asp-for="Category" class="form-label"></label>
+                            <select asp-for="Category" class="form-select" asp-items="Html.GetEnumSelectList<ExpenseCategory>()">
+                                <option value="">-- Select Category --</option>
+                            </select>
+                            <span asp-validation-for="Category" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label"></label>
+                    <input asp-for="Description" class="form-control" placeholder="Optional: Additional details about this expense" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="Amount" class="form-label"></label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input asp-for="Amount" type="number" step="0.01" min="0.01" class="form-control" placeholder="0.00" />
+                            </div>
+                            <span asp-validation-for="Amount" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="ExpenseDate" class="form-label"></label>
+                            <input asp-for="ExpenseDate" type="date" class="form-control" />
+                            <span asp-validation-for="ExpenseDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="GuestNames" class="form-label"></label>
+                    <input asp-for="GuestNames" class="form-control" placeholder="e.g., John Smith, Jane Doe (optional)" />
+                    <span asp-validation-for="GuestNames" class="text-danger"></span>
+                    <div class="form-text">List any guests or attendees for this expense</div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Receipt</label>
+
+                    <!-- File upload input -->
+                    <input type="file" id="receiptFile" name="receiptFile" capture="environment" accept="image/*" class="form-control mb-2" />
+                                    
+                    <span asp-validation-for="BlobName" class="text-danger"></span>
+                    <div class="form-text">
+                        <span id="mobile-text" style="display:none;">Take a photo or select from gallery</span>
+                        <span id="desktop-text">Upload an image file</span>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <button type="submit" class="btn btn-success">Add Expense</button>
+                    @if (ViewBag.TripId != null)
+                    {
+                        <a asp-area="" asp-controller="Trips" asp-action="Details" asp-route-id="@ViewBag.TripId" class="btn btn-secondary">Cancel</a>
+                    }
+                    else
+                    {
+                        <a asp-area="" asp-controller="Home" asp-action="Index" class="btn btn-secondary">Cancel</a>
+                    }
+                </div>
+            </form>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="bg-light p-3 rounded mb-3">
+                <h5>Expense Categories</h5>
+                <ul class="small">
+                    <li><strong>Accommodation:</strong> Hotels, lodging, room service</li>
+                    <li><strong>Transportation:</strong> Flights, trains, taxis, rental cars</li>
+                    <li><strong>Meals:</strong> Restaurants, room service, catering</li>
+                    <li><strong>Entertainment:</strong> Client entertainment, events</li>
+                    <li><strong>Other:</strong> Miscellaneous business expenses</li>
+                </ul>
+            </div>
+
+            <div class="bg-info bg-opacity-10 border border-info p-3 rounded">
+                <h6 class="text-info">Tips</h6>
+                <ul class="small mb-0">                    
+                    <li>Include guest names for meal expenses</li>
+                    <li>Set the correct expense date for accurate reporting</li>                   
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const expenseDate = document.getElementById('@Html.IdFor(m => m.ExpenseDate)');
+            const receiptFile = document.getElementById('receiptFile');     
+        
+           
+            // Set expense date to today if not already set
+            if (!expenseDate.value) {
+                const today = new Date();
+                expenseDate.value = today.toISOString().split('T')[0];
+            }
+
+            // Validate expense date is not in the future
+            expenseDate.addEventListener('change', function() {
+                const today = new Date();
+                const selectedDate = new Date(expenseDate.value);
+
+                if (selectedDate > today) {
+                    alert('Expense date cannot be in the future.');
+                    expenseDate.value = today.toISOString().split('T')[0];
+                }
+            });
+
+              // Handle file upload
+            receiptFile.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const file = this.files[0];
+
+                    // Validate file type
+                    if (!file.type.startsWith('image/')) {
+                        alert('Please select an image file.');
+                        this.value = '';
+                        return;
+                    }
+
+              
+                }
+            });
+
+
+            // Focus amount field when category is selected
+            const categorySelect = document.getElementById('@Html.IdFor(m => m.Category)');
+            const amountInput = document.getElementById('@Html.IdFor(m => m.Amount)');
+
+            categorySelect.addEventListener('change', function() {
+                if (this.value && amountInput && !amountInput.value) {
+                    setTimeout(() => amountInput.focus(), 100);
+                }
+            });
+        });
+    </script>
+}

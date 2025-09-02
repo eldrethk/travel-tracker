@@ -1,0 +1,177 @@
+﻿@model TravelExpenseTracker.Domain.Expense
+@using TravelExpenseTracker.Domain
+
+@{
+    ViewData["Title"] = "Expense Details";
+}
+
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 mt-3">
+        <div>
+            <h1>Expense Details</h1>
+        </div>
+        <div>
+            @if (Model.TripId != null)
+            {
+                <a asp-area="" asp-controller="Trips" asp-action="Details" asp-route-id="@Model.TripId" class="btn btn-outline-info">Back to Trip</a>
+            }
+            <a asp-area="" asp-controller="Expenses" asp-action="Edit" asp-route-id="@Model.Id" asp-route-tripId="@Model.TripId" class="btn btn-outline-secondary">Edit</a>
+            <a data-expense-id="@Model.Id" data-expense-name="@Model.CompanyName" data-trip-id="@Model.TripId"
+               class="btn btn-outline-danger"
+               onclick="deleteTrip(this)">
+                Delete
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Expense Information Card -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">@Model.Category.ToString() Expense</h4>
+                </div>
+                <div class="card-body">             
+                    <div class="row">
+                        <div class="col-md-6">                         
+                            <p><strong>Company Name:</strong> @Model.CompanyName</p>
+                            <p><strong>Expense Date:</strong> @Model.ExpenseDate.ToString("dddd, MMMM dd, yyyy")</p>
+
+                          
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Amount:</strong> <span class="h4 text-success">@Model.Amount.ToString("C")</span></p>
+                            <p>
+                                <strong>Category:</strong>
+                                <span class="badge bg-secondary">@Model.Category.ToString()</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            @if (!string.IsNullOrEmpty(Model.Description))
+                            {
+                                <p><strong>Description:</strong> @Model.Description</p>
+                            }
+                        </div>
+                        <div class="col-md-6">
+                            @if (!string.IsNullOrEmpty(Model.GuestNames))
+                            {
+                                <h5>Guests</h5>
+                                <p><strong>Guest Names:</strong> @Model.GuestNames</p>
+                            }
+                            else
+                            {
+                                <h5>Guests</h5>
+                                <p class="text-muted">No guests listed</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Receipt Section -->
+            @if (!string.IsNullOrEmpty(Model.BlobName))
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Receipt</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            <strong>Download Receipt:</strong>
+                            <a href="@Model.BlobUrl" target="_blank" class="btn btn-sm btn-outline-primary">View Receipt</a>
+                        </p>
+                        <img src="@Model.BlobUrl" class="img-thumbnail" />
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Receipt</h5>
+                    </div>
+                    <div class="card-body text-center text-muted">
+                        <p>No receipt uploaded for this expense</p>
+                        <a asp-area="" asp-controller="Expenses" asp-action="Edit" asp-route-tripId="@Model.TripId" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-secondary">Add Receipt</a>
+                    </div>
+                </div>
+            }
+
+            <!-- Trip Association -->
+            @if (Model.TripId != null && ViewBag.TripName != null)
+            {
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Associated Trip</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6>@ViewBag.TripName</h6>
+                                <p class="text-muted mb-0">@ViewBag.TripDates</p>
+                            </div>
+                            <a asp-area="" asp-controller="Trips" asp-action="Details" asp-route-id="@Model.TripId" class="btn btn-primary">View Trip</a>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Trip Association</h5>
+                    </div>
+                    <div class="card-body text-center text-muted">
+                        <p>This expense is not associated with any trip</p>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+        
+
+            <!-- Expense Summary -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h6 class="mb-0">Expense Summary</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li><strong>ID:</strong> #@Model.Id</li>
+                        <li><strong>Created:</strong> @Model.CreatedAt.ToString("MMM dd, yyyy 'at' h:mm tt")</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--hidden form to trigger a post for the delete link-->
+<!--This technique keeps the style for the group buttons</style>-->
+<form id="deleteForm" method="post" style="display:none;">
+    @Html.AntiForgeryToken()
+</form>
+
+<script>
+    function deleteTrip(element) {
+        var expenseId = element.getAttribute('data-expense-id');
+        var expenseName = element.getAttribute('data-expense-name');
+        var tripId = element.getAttribute('data-trip-id');
+
+        if (confirm('Are you sure you want to delete ' + expenseName + '?')) {
+            var form = document.getElementById('deleteForm');
+            form.action = '@Url.Action("Delete", "Expenses")/' + expenseId + '?tripId=' + tripId;
+            form.submit();
+        }
+    }
+</script>

@@ -1,0 +1,26 @@
+﻿@model List<TravelExpenseTracker.Domain.Trip>
+
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+        Trips
+    </a>
+    <ul class="dropdown-menu">
+        @if (Model.Any())
+        {
+            @foreach (var trip in Model)
+            {
+                <li>
+                    <a class="dropdown-item" asp-area="" asp-controller="Trips" asp-action="Details" asp-route-id="@trip.Id">
+                        <div>
+                            <strong class="text-primary">@trip.Name</strong>
+                            <br><small class="text-muted">@trip.StartDate.ToString("MMM dd") - @trip.EndDate.ToString("MMM dd")</small>
+                        </div>
+                    </a>
+                </li>
+            }
+            <li><hr class="dropdown-divider"></li>
+        }
+        <li><a class="dropdown-item" asp-area="" asp-controller="Trips" asp-action="Index">All Trips</a></li>
+        <li><a class="dropdown-item" asp-area="" asp-controller="Trips" asp-action="Create">Create New Trip</a></li>
+    </ul>
+</li>
