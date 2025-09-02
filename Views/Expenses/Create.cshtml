@@ -85,9 +85,35 @@
                 <div class="mb-3">
                     <label class="form-label">Receipt</label>
 
-                    <!-- File upload input -->
+                    <!-- File upload input 
                     <input type="file" id="receiptFile" name="receiptFile" capture="environment" accept="image/*" class="form-control mb-2" />
-                                    
+                                    -->
+                    <!-- GALLERY: allow choosing from photo library -->
+                    <input type="file"
+                           id="galleryInput"
+                           name="receiptFile"
+                           accept="image/*"
+                           style="display:none" />
+
+                    <!-- CAMERA: force camera UI (environment = back camera on many devices) -->
+                    <input type="file"
+                           id="cameraInput"
+                           name="receiptFile"
+                           accept="image/*"
+                           capture="environment"
+                           style="display:none" />
+
+                    <!-- Visible buttons -->
+                    <button type="button" class="btn btn-outline-primary"
+                            onclick="document.getElementById('galleryInput').click();">
+                        Upload from gallery
+                    </button>
+
+                    <button type="button" class="btn btn-primary"
+                            onclick="document.getElementById('cameraInput').click();">
+                        Take a picture
+                    </button>
+
                     <span asp-validation-for="BlobName" class="text-danger"></span>
                     <div class="form-text">
                         <span id="mobile-text" style="display:none;">Take a photo or select from gallery</span>
@@ -137,12 +163,14 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-    <script>
+    <script>     
         document.addEventListener('DOMContentLoaded', function() {
-            const expenseDate = document.getElementById('@Html.IdFor(m => m.ExpenseDate)');
-            const receiptFile = document.getElementById('receiptFile');     
-        
            
+            const expenseDate = document.getElementById('@Html.IdFor(m => m.ExpenseDate)');
+            const galleryFile = document.getElementById('galleryInput');
+            const cameraFile = document.getElementById('cameraInput');
+
+
             // Set expense date to today if not already set
             if (!expenseDate.value) {
                 const today = new Date();
@@ -160,19 +188,11 @@
                 }
             });
 
-              // Handle file upload
-            receiptFile.addEventListener('change', function() {
-                if (this.files && this.files[0]) {
-                    const file = this.files[0];
-
-                    // Validate file type
-                    if (!file.type.startsWith('image/')) {
-                        alert('Please select an image file.');
-                        this.value = '';
-                        return;
-                    }
-
-              
+            // Handle file upload
+            // Attach listeners for both inputs
+            [cameraFile, galleryFile].forEach(input => {
+                if (input) {
+                    input.addEventListener('change', handleFileSelection);
                 }
             });
 
@@ -187,5 +207,29 @@
                 }
             });
         });
+
+        function handleFileSelection(event){
+                const MAX_FILE_SIZE_MB = 5;
+                const fileInput = event.target;
+
+                if (!fileInput.files || !fileInput.files[0]) return;
+
+                const file = fileInput.files[0];
+
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    alert('Please select a valid image file (JPEG, PNG, etc.)');
+                    fileInput.value = ''; // Reset invalid file
+                    return;
+                }
+
+                //Validate file size 
+                const fileSizeMB = file.size / (1024 * 1024);
+                if (fileSizeMB > MAX_FILE_SIZE_MB) {
+                    alert(`File too large! Maximum allowed size is ${MAX_FILE_SIZE_MB} MB.`);
+                    fileInput.value = '';
+                    return;
+                }
+        }
     </script>
 }
