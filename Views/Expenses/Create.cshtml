@@ -76,19 +76,9 @@
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="GuestNames" class="form-label"></label>
-                    <input asp-for="GuestNames" class="form-control" placeholder="e.g., John Smith, Jane Doe (optional)" />
-                    <span asp-validation-for="GuestNames" class="text-danger"></span>
-                    <div class="form-text">List any guests or attendees for this expense</div>
-                </div>
+                    <label class="form-label">Upload an Receipt file</label>
 
-                <div class="mb-3">
-                    <label class="form-label">Receipt</label>
-
-                    <!-- File upload input 
-                    <input type="file" id="receiptFile" name="receiptFile" capture="environment" accept="image/*" class="form-control mb-2" />
-                                    -->
-                    <!-- GALLERY: allow choosing from photo library -->
+                     <!-- GALLERY: allow choosing from photo library -->
                     <input type="file"
                            id="galleryInput"
                            name="receiptFile"
@@ -104,24 +94,30 @@
                            style="display:none" />
 
                     <!-- Visible buttons -->
-                    <button type="button" class="btn btn-outline-primary"
-                            onclick="document.getElementById('galleryInput').click();">
-                        Upload from gallery
-                    </button>
+                    <div class="gap-2">
+                        <button type="button" class="btn btn-outline-primary"
+                                onclick="document.getElementById('galleryInput').click();">
+                            Upload from gallery
+                        </button>
 
-                    <button type="button" class="btn btn-primary"
-                            onclick="document.getElementById('cameraInput').click();">
-                        Take a picture
-                    </button>
-
-                    <span asp-validation-for="BlobName" class="text-danger"></span>
-                    <div class="form-text">
-                        <span id="mobile-text" style="display:none;">Take a photo or select from gallery</span>
-                        <span id="desktop-text">Upload an image file</span>
+                        <button type="button" class="btn btn-primary"
+                                onclick="document.getElementById('cameraInput').click();">
+                            Take a picture
+                        </button>
                     </div>
+                    <span asp-validation-for="BlobName" class="text-danger"></span>
+                   
                 </div>
 
-                <div class="mb-4">
+
+                <div class="mb-3">
+                    <label asp-for="GuestNames" class="form-label"></label>
+                    <input asp-for="GuestNames" class="form-control" placeholder="e.g., John Smith, Jane Doe (optional)" />
+                    <span asp-validation-for="GuestNames" class="text-danger"></span>
+                    <div class="form-text">List any guests or attendees for this expense</div>
+                </div>
+
+                <div class="mb-4 d-flex justify-content-end gap-2">
                     <button type="submit" class="btn btn-success">Add Expense</button>
                     @if (ViewBag.TripId != null)
                     {

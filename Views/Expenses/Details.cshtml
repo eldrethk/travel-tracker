@@ -16,12 +16,8 @@
             {
                 <a asp-area="" asp-controller="Trips" asp-action="Details" asp-route-id="@Model.TripId" class="btn btn-outline-info">Back to Trip</a>
             }
-            <a asp-area="" asp-controller="Expenses" asp-action="Edit" asp-route-id="@Model.Id" asp-route-tripId="@Model.TripId" class="btn btn-outline-secondary">Edit</a>
-            <a data-expense-id="@Model.Id" data-expense-name="@Model.CompanyName" data-trip-id="@Model.TripId"
-               class="btn btn-outline-danger"
-               onclick="deleteTrip(this)">
-                Delete
-            </a>
+            <a asp-area="" asp-controller="Expenses" asp-action="Edit" asp-route-id="@Model.Id" asp-route-tripId="@Model.TripId" class="btn btn-info">Edit</a>
+           
         </div>
     </div>
 
@@ -75,6 +71,14 @@
                 </div>
             </div>
 
+            <div class="mb-4 d-flex justify-content-end gap-2">
+                <a data-expense-id="@Model.Id" data-expense-name="@Model.CompanyName" data-trip-id="@Model.TripId"
+                   class="btn btn-danger"
+                   onclick="deleteTrip(this)">
+                    Delete Expense
+                </a>
+            </div>
+
             <!-- Receipt Section -->
             @if (!string.IsNullOrEmpty(Model.BlobName))
             {
@@ -107,7 +111,7 @@
             <!-- Trip Association -->
             @if (Model.TripId != null && ViewBag.TripName != null)
             {
-                <div class="card">
+                <div class="card mb-3">
                     <div class="card-header">
                         <h5 class="mb-0">Associated Trip</h5>
                     </div>
@@ -117,14 +121,14 @@
                                 <h6>@ViewBag.TripName</h6>
                                 <p class="text-muted mb-0">@ViewBag.TripDates</p>
                             </div>
-                            <a asp-area="" asp-controller="Trips" asp-action="Details" asp-route-id="@Model.TripId" class="btn btn-primary">View Trip</a>
+                            <a asp-area="" asp-controller="Trips" asp-action="Details" asp-route-id="@Model.TripId" class="btn btn-outline-primary">View Trip</a>
                         </div>
                     </div>
                 </div>
             }
             else
             {
-                <div class="card">
+                <div class="card mb-3">
                     <div class="card-header">
                         <h5 class="mb-0">Trip Association</h5>
                     </div>

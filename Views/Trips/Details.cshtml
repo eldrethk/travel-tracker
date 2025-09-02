@@ -59,8 +59,6 @@
         </div>
     </div>
 
-    <hr>
-
     <!-- Expense Categories -->
     @foreach (ExpenseCategory category in Enum.GetValues<ExpenseCategory>())
     {
@@ -69,7 +67,7 @@
         var tableColor = @TripViewModel.CategoryClasses.GetValueOrDefault(category.ToString(), "bg-dark");
         <div class="mb-5">
             <div class="d-flex justify-content-between align-items-center p-2 @tableColor">
-                <h3>@category.ToString()</h3>
+                <h4 class="p-2">@category.ToString()</h4>
                 <div>
                     <span class="badge bg-dark me-2">@categoryExpenses.Count expenses</span>
                     <span class="badge bg-primary">@categoryTotal.ToString("C")</span>
@@ -79,13 +77,11 @@
             @if (categoryExpenses.Any())
             {
                 <div class="table-responsive">
-                    <table class="table table-hover">
+                    <table class="table border-dark">
                         <thead class="table-light">
                             <tr>
                                 <th>Date</th>
-                                <th>Company</th>
-                                <th>Description</th>
-                                <th>Guests</th>
+                                <th>Company</th>                             
                                 <th class="text-end">Amount</th>
                                 <th class="text-center">Receipt</th>
                                 <th class="text-center">Actions</th>
@@ -94,11 +90,9 @@
                         <tbody>
                             @foreach (var expense in categoryExpenses)
                             {
-                                <tr>
-                                    <td>@expense.ExpenseDate.ToString("ddd - MMM dd")</td>
-                                    <td><strong>@expense.CompanyName</strong></td>
-                                    <td>@(expense.Description ?? "—")</td>
-                                    <td>@(expense.GuestNames ?? "—")</td>
+                                <tr class="border-white">
+                                    <td class="text-center flex-nowrap text-nowrap">@expense.ExpenseDate.ToString("ddd MMM dd")</td>
+                                    <td><strong>@expense.CompanyName</strong></td>                                 
                                     <td class="text-end">@expense.Amount.ToString("C")</td>
                                     <td class="text-center">
                                         @if (!string.IsNullOrEmpty(expense.BlobName))
@@ -124,11 +118,23 @@
                                         </div>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td colspan="5">
+                                        @if (!string.IsNullOrEmpty(expense.Description))
+                                        {
+                                            <p class="mb-1">@expense.Description</p>
+                                        }
+                                        @if (!string.IsNullOrEmpty(expense.GuestNames))
+                                        {
+                                            <p class="mb-0"><strong>Guests:</strong> @expense.GuestNames</p>
+                                        }
+                                    </td>
+                                </tr>
                             }
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="4"><strong>@category.ToString() Total</strong></td>
+                                <td colspan="3"><strong>@category.ToString() Total</strong></td>
                                 <td class="text-end"><strong>@categoryTotal.ToString("C")</strong></td>
                                 <td colspan="2"></td>
                             </tr>
