@@ -27,16 +27,18 @@ builder.Services.AddSingleton(sp =>
     return new BlobServiceClient(builder.Configuration.GetConnectionString("AzureStorage"));
 });
 
+builder.Services.AddSingleton(sp =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("Cosmos");
+    return new CosmosClient(connectionString);
+});
+
 // Add Entity Framework - Use In-Memory for free tier, easily switchable to SQL
 if (builder.Environment.IsDevelopment())
 {
     //builder.Services.AddDbContext<ApplicationDbContext>(options =>
     // options.UseInMemoryDatabase("TravelExpenseDb"));
-    builder.Services.AddSingleton(sp =>
-    {
-        var connectionString = builder.Configuration.GetConnectionString("Cosmos");
-        return new CosmosClient(connectionString);
-    });
+
 }
 else
 {
