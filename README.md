@@ -1,50 +1,61 @@
-🌍 Travel Expense Tracker
+## 🌍 Travel Expense Tracker
 
 A web application for managing travel expenses with receipt storage and expense categorization.
 Built with ASP.NET Core 9.0 MVC and deployed on Azure App Service with automated CI/CD.
 
-🎥 Demo
+---
+
+### 🎥 Demo
 
 
 This demo shows creating a trip, adding expenses with receipt uploads, and viewing categorized summaries.
+(Coming Soon)
 
-✨ Features
+---
 
-🗺️ Trip Management – Create and manage travel trips with date validation
+### ✨ Features
 
-💰 Expense Tracking – Add expenses with categories (Accommodation, Transportation, Meals, Entertainment, Other)
+-🗺️ **Trip Management** – Create and manage travel trips with date validation
 
-🧾 Receipt Storage – Upload and store receipt images using Azure Blob Storage
+-💰 **Expense Tracking** – Add expenses with categories (Accommodation, Transportation, Meals, Entertainment, Other)
 
-📊 Expense Summaries – View categorized expense breakdowns for each trip
+-🧾 **Receipt Storage** – Upload and store receipt images using Azure Blob Storage
 
-☁️ Data Persistence – Uses Azure Cosmos DB for scalable data storage
+-📊 **Expense Summaries** – View categorized expense breakdowns for each trip
 
-🛠️ Technology Stack
-Component	Technology
-Backend	ASP.NET Core 9.0 MVC
-Database	Azure Cosmos DB
-File Storage	Azure Blob Storage
-Hosting	Azure App Service
-CI/CD	GitHub Actions
-Authentication	Anonymous (extensible)
-🏗️ Architecture
-Services
+-☁️ **Data Persistence** – Uses Azure Cosmos DB for scalable data storage
 
-ITripService / TripService – Handles trip CRUD operations
+---
 
-IExpenseService / ExpenseService – Manages expense data and categorization
+### 🛠️ Technology Stack
+- Component	Technology
+- Backend	ASP.NET Core 9.0 MVC
+- Database	Azure Cosmos DB
+- File Storage	Azure Blob Storage
+- Hosting	Azure App Service
+- CI/CD	GitHub Actions
+- Authentication	Anonymous (extensible)
 
-IBlobService / BlobService – Handles receipt image upload and storage
+---
 
-IContainerNameResolver – Manages Azure Blob container naming
+### 🏗️ Architecture
 
-Data Models
+#### Services
 
-Trip – Represents a travel trip with dates and expense summary
+- **ITripService / TripService**– Handles trip CRUD operations
 
-Expense – Individual expense items with categories and amounts
+- **IExpenseService / ExpenseService**– Manages expense data and categorization
 
-ExpenseSummary – Aggregated expense data by category
+- **IBlobService / BlobService**– Handles receipt image upload and storage
 
-ExpenseCategory – Enum for expense categorization
+- **IContainerNameResolver**– Manages Azure Blob container naming
+
+#### Data Models
+
+- **Trip** – Represents a travel trip with dates and expense summary
+
+- **Expense** – Individual expense items with categories and amounts
+
+- **ExpenseSummary** – Aggregated expense data by category
+
+- **ExpenseCategory** – Enum for expense categorization
