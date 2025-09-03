@@ -65,3 +65,51 @@ body {
     background-color: #94a3b8 !important;
     color: #FFF !important;
 }
+
+/*Identity style*/
+/* Default: desktop behavior */
+.auth-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem; /* spacing between items */
+}
+
+.username-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: .5em;
+}
+
+.auth-item {
+    text-align: center;
+    padding: .5rem;
+}
+
+.auth-btn {
+    white-space: nowrap;
+}
+
+/* Mobile: stack full-width, center text */
+@media (max-width: 991.98px) {
+    .auth-nav {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+
+
+    .username-item {
+        justify-content: center;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 0.25rem;
+    }
+
+    .auth-btn {
+        width: 75%; /* full width but padded */
+        text-align: center;
+    }
+}
