@@ -35,7 +35,7 @@ namespace TravelExpenseTracker.Controllers
             return LocalRedirect(returnUrl ?? "/");
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
             var scheme = User.FindFirst("iss")?.Value?.Contains("microsoft") == true
