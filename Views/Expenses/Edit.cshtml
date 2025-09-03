@@ -7,12 +7,9 @@
 
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4 mt-3">
-        <h1>Edit Expense</h1>
-        <div>
-            @if (Model.TripId != null)
-            {
-                <a asp-area="" asp-controller="Trips" asp-action="Details" asp-route-id="@Model.TripId" class="btn btn-outline-info">Back to Trip</a>
-            }
+        <h2>Edit Expense</h2>
+        <div>           
+            <a asp-area="" asp-controller="Trips" asp-action="Details" asp-route-id="@Model.TripId" class="btn btn-outline-info">Back to Trip</a>
             <a asp-area="" asp-controller="Expenses" asp-action="Details" asp-route-tripId="@Model.TripId" asp-route-id="@Model.Id" class="btn btn-outline-secondary">View Details</a>
         </div>
     </div>
@@ -28,8 +25,8 @@
 
                 @if (Model.TripId != null && ViewBag.TripName != null)
                 {
-                    <div class="alert alert-info h5">
-                        <strong>Trip:</strong> @ViewBag.TripName
+                    <div class="alert alert-secondary">
+                        <strong>Trip: @ViewBag.TripName </strong>
                         <span class="text-dark">(@ViewBag.TripDates)</span>
                     </div>
                 }
@@ -121,11 +118,11 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Receipt (Optional)</label>
+                    <label class="form-label">Receipt (Optional)</label><br/>
                     <input type="hidden" asp-for="BlobName" />
                     @if (!string.IsNullOrEmpty(Model.BlobName))
                     {
-                        <img src="@Model.BlobUrl" class="img-thumbnail" />
+                        <img src="@Model.BlobUrl" class="img-thumbnail w-100 h-auto" style="max-height:440px;"/>
                     }
                     
                 </div>

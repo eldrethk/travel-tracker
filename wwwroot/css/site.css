@@ -42,26 +42,26 @@ body {
 /*expense category colors*/
 .bg-accom {
     --bs-bg-opacity: 1;
-    background-color: #335786 !important;
+    background-color: #5b8def !important;
     color: #FFF !important;
 }
 .bg-trans {
     --bs-bg-opacity: 1;
-    background-color: #6F7302 !important;
+    background-color: #5aa897 !important;
     color: #FFF !important;
 }
 .bg-meals {
     --bs-bg-opacity: 1;
-    background-color: #F29F05 !important;
+    background-color: #f1d683 !important;
     color: #FFF !important;
 }
 .bg-entert {
     --bs-bg-opacity: 1;
-    background-color: #89738A !important;
+    background-color: #c2edda !important;
     color: #FFF !important;
 }
 .bg-other {
     --bs-bg-opacity: 1;
-    background-color: #99B4BF !important;
+    background-color: #94a3b8 !important;
     color: #FFF !important;
 }

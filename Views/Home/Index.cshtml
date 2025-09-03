@@ -17,7 +17,7 @@
                     <div class="card-header h5">@item.Trip.Name</div>
                     <div class="card-body bg-white text-dark rounded-bottom pb-0">
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h6 class="text-info">@item.Trip.StartDate.ToString("MMM-dd") thru @item.Trip.EndDate.ToString("MMM-dd")</h6>
+                            <h6 class="text-dark">@item.Trip.StartDate.ToString("MMM-dd") thru @item.Trip.EndDate.ToString("MMM-dd")</h6>
                             <a asp-area="" asp-controller="Expenses" asp-action="Create" asp-route-tripId="@item.Trip.Id" class="btn btn-success">Add Expense</a>
                         </div>
                         <p class="card-text">@item.Trip.Description</p>
@@ -39,10 +39,10 @@
                             @foreach (var category in allCategories)
                             {
                                 <a href="#" class="list-group-item @TripViewModel.CategoryClasses.GetValueOrDefault(category.Category, "bg-dark")">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-1">@category.Category</h6>
-                                        <span class="badge rounded-pill bg-secondary">@category.Count</span>
-                                        <span class="badge rounded-pill bg-dark">@category.Amount.ToString("C")</span>
+                                    <div class="row g-0 align-items-center">
+                                        <div class="col-7"><h6 class="mb-1 text-black">@category.Category</h6></div>
+                                        <div class="col-auto"><span class="badge rounded-pill bg-light text-primary fw-bold">@category.Count</span></div>
+                                        <div class="col-auto ms-auto text-end ms-auto"><span class="badge rounded-pill bg-light"><strong>@category.Amount.ToString("C")</strong></span></div>
                                     </div>
                                 </a>
                             }                         

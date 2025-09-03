@@ -53,7 +53,7 @@
         </div>
         <div class="col-md-3 d-none d-md-block">
             <div class="text-center">
-                <h4 class="text-secondary">@((Model.Trip.EndDate - Model.Trip.StartDate).Days + 1)</h4>
+                <h4 class="text-dark">@((Model.Trip.EndDate - Model.Trip.StartDate).Days + 1)</h4>
                 <small class="text-muted">Days</small>
             </div>
         </div>
@@ -67,10 +67,10 @@
         var tableColor = @TripViewModel.CategoryClasses.GetValueOrDefault(category.ToString(), "bg-dark");
         <div class="mb-5">
             <div class="d-flex justify-content-between align-items-center p-2 @tableColor">
-                <h4 class="p-2">@category.ToString()</h4>
+                <h4 class="p-2 text-black">@category.ToString()</h4>
                 <div>
                     <span class="badge bg-dark me-2">@categoryExpenses.Count expenses</span>
-                    <span class="badge bg-primary">@categoryTotal.ToString("C")</span>
+                    <span class="badge bg-light"><strong>@categoryTotal.ToString("C")</strong></span>
                 </div>
             </div>
 
@@ -91,17 +91,17 @@
                             @foreach (var expense in categoryExpenses)
                             {
                                 <tr class="border-white">
-                                    <td class="text-center flex-nowrap text-nowrap">@expense.ExpenseDate.ToString("ddd MMM dd")</td>
+                                    <td class="flex-nowrap text-nowrap">@expense.ExpenseDate.ToString("ddd MMM dd")</td>
                                     <td><strong>@expense.CompanyName</strong></td>                                 
                                     <td class="text-end">@expense.Amount.ToString("C")</td>
                                     <td class="text-center">
                                         @if (!string.IsNullOrEmpty(expense.BlobName))
-                                        {
-                                            <span class="badge bg-success">Yes</span>
+                                        {                                        
+                                            <i class="fa-solid fa-square-check fa-2xl text-success"></i>
                                         }
                                         else
                                         {
-                                            <span class="badge bg-warning">No</span>
+                                            <i class="fa-solid fa-square-xmark fa-2xl text-danger"></i>
                                         }
                                     </td>
                                     <td class="text-center">
@@ -109,7 +109,7 @@
                                             <a asp-area="" asp-controller="Expenses" asp-action="Details" asp-route-id="@expense.Id" asp-route-tripId="@expense.TripId" class="btn btn-outline-primary" title="View Details">
                                                 View
                                             </a>
-                                            <a asp-area="" asp-controller="Expenses" asp-action="Edit" asp-route-id="@expense.Id" asp-route-tripid="@expense.TripId" class="btn btn-outline-secondary" title="Edit">
+                                            <a asp-area="" asp-controller="Expenses" asp-action="Edit" asp-route-id="@expense.Id" asp-route-tripid="@expense.TripId" class="btn btn-outline-dark" title="Edit">
                                                 Edit
                                             </a>
                                             <a data-expense-id="@expense.Id" data-expense-name="@expense.CompanyName" data-trip-id="@Model.Trip.Id" class="btn btn-outline-danger" title="Delete" onclick="deleteExpense(this)">
