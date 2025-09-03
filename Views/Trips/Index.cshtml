@@ -50,7 +50,7 @@
             <div class="col-md-3 col-6 mb-4">
                 <div class="card text-center">
                     <div class="card-body">
-                        <h3 class="text-secondary">@(Model.Average(t => t.ExpenseSummary.TotalAmount).ToString("C"))</h3>
+                        <h3 class="text-dark">@(Model.Average(t => t.ExpenseSummary.TotalAmount).ToString("C"))</h3>
                         <small class="text-muted">Average per Trip</small>
                     </div>
                 </div>
@@ -117,7 +117,7 @@
                                             View
                                         </a>
                                         <a asp-area="" asp-controller="Trips" asp-action="Edit" asp-route-id="@trip.Id"
-                                           class="btn btn-outline-success" title="Edit">
+                                           class="btn btn-outline-dark" title="Edit">
                                             Edit
                                         </a>
                                         <div class="btn-group btn-group-sm">
@@ -125,7 +125,7 @@
                                                 More
                                             </button>
                                             <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" asp-area="" asp-controller="Expenses" asp-action="Create" asp-route-tripId="@trip.Id">Add Expense</a></li>
+                                                <li><a class="dropdown-item text-success" asp-area="" asp-controller="Expenses" asp-action="Create" asp-route-tripId="@trip.Id">Add Expense</a></li>
                                                 <li><hr class="dropdown-divider"></li>
                                                 <li>
                                                     <a class="dropdown-item text-danger" data-trip-id="@trip.Id" data-trip-name="@trip.Name"
