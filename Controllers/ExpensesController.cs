@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TravelExpenseTracker.Domain;
 using TravelExpenseTracker.Services;
 
 namespace TravelExpenseTracker.Controllers
 {
+    [Authorize]
     public class ExpensesController : Controller
     {
         private readonly ITripService _tripService;

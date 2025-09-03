@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using TravelExpenseTracker.Models;
 using TravelExpenseTracker.Services;
 using TravelExpenseTracker.Domain;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TravelExpenseTracker.Controllers
-{   
+{
+    [Authorize]
     public class TripsController : Controller
     {
         private readonly ILogger<TripsController> _logger;
