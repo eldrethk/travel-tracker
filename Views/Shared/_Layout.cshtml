@@ -26,6 +26,14 @@
                 </li>
                         @await Component.InvokeAsync("TripsDropDown")
               </ul>
+
+              @if(User?.Identity?.IsAuthenticated ?? false){
+                  <span class="me-2">Hello, @User.Identity.Name</span>
+                  <a class="btn btn-outline-dark btn-sm" asp-controller="Account" asp-action="Logout">Sign Out</a>
+              }
+              else{
+                        <a class="btn btn-primary btn-sm" asp-controller="Account" asp-action="Index">Sign In</a>                        
+              }
               <form class="d-flex m-2">
                 <input class="form-control me-sm-3" type="search" placeholder="Search">
                 <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
