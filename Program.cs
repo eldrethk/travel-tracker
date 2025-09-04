@@ -36,6 +36,14 @@ var authBuilder = builder.Services
         options.CallbackPath = "/signin-oidc";
         options.Events = new OpenIdConnectEvents
         {
+            OnAuthorizationCodeReceived = context =>
+            {
+                // Ensure no client credentials are sent
+                context.TokenEndpointRequest.ClientSecret = null;
+                context.TokenEndpointRequest.ClientAssertion = null;
+                context.TokenEndpointRequest.ClientAssertionType = null;
+                return Task.CompletedTask;
+            },
             OnSignedOutCallbackRedirect = context =>
             {
                 context.Response.Redirect("/");
