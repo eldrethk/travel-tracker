@@ -21,29 +21,36 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-var authBuilder = builder.Services
+builder.Services
     .AddAuthentication(options =>
     {
         options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
         options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-    });   
-
-    authBuilder.AddMicrosoftIdentityWebApp(options =>
+    })
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
     {
-        builder.Configuration.Bind("AzureAd", options);
+        options.Authority = $"https://login.microsoftonline.com/{builder.Configuration["AzureAd:TenantId"]}/v2.0";
+        options.ClientId = builder.Configuration["AzureAd:ClientId"];
         options.ResponseType = OpenIdConnectResponseType.Code;
-        options.UsePkce = true;
         options.CallbackPath = "/signin-oidc";
+        options.SignedOutCallbackPath = "/signout-callback-oidc";
+        options.UsePkce = true;
+
+        // Explicitly remove any client authentication
+        options.ClientSecret = null;
+
+        // Configure scopes
+        options.Scope.Clear();
+        options.Scope.Add("openid");
+        options.Scope.Add("profile");
+        options.Scope.Add("email");
+
+        // Save tokens for later use if needed
+        options.SaveTokens = true;
+
         options.Events = new OpenIdConnectEvents
         {
-            OnAuthorizationCodeReceived = context =>
-            {
-                // Ensure no client credentials are sent
-                context.TokenEndpointRequest.ClientSecret = null;
-                context.TokenEndpointRequest.ClientAssertion = null;
-                context.TokenEndpointRequest.ClientAssertionType = null;
-                return Task.CompletedTask;
-            },
             OnSignedOutCallbackRedirect = context =>
             {
                 context.Response.Redirect("/");
@@ -51,8 +58,8 @@ var authBuilder = builder.Services
                 return Task.CompletedTask;
             }
         };
-    });
-    authBuilder.AddGoogle(options =>
+    })
+    .AddGoogle(options =>
     {
         options.ClientId = builder.Configuration["GoogleAuth:ClientId"]!;
         options.ClientSecret = builder.Configuration["GoogleAuth:ClientSecret"]!;
