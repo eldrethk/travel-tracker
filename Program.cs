@@ -78,6 +78,8 @@ builder.Services.AddSingleton(sp =>
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseInMemoryDatabase("TravelExpenseDb"));
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITripService, TripService>();
 builder.Services.AddScoped<IExpenseService, ExpenseService>();
 builder.Services.AddSingleton<IContainerNameResolver, ContainerNameResolver>();

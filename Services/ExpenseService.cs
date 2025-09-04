@@ -9,27 +9,30 @@ namespace TravelExpenseTracker.Services
     public interface IExpenseService
     {
         Task<Expense> AddExpense(Expense expense);
-        Task<Expense?> GetExpenseById(string id, string tripId);
+        Task<Expense?> GetExpenseById(string id);
         Task<List<Expense>> GetExpensesByTripId(string tripId);
         Task<bool> UpdateExpense(Expense expense);
-        Task<bool> DeleteExpense(string id, string tripId);
+        Task<bool> DeleteExpense(string id);
         Task<ExpenseSummary> GetExpenseSummary(string tripId);
 
     }
     public class ExpenseService : IExpenseService
     {
         private readonly Container _expenseContainer;
+        private readonly IUserService _userService;
         private readonly ILogger<ExpenseService> _logger;
-        public ExpenseService(CosmosClient cosmosClient, ILogger<ExpenseService> logger)
+        public ExpenseService(CosmosClient cosmosClient, IUserService userService, ILogger<ExpenseService> logger)
         {
             _expenseContainer = cosmosClient.GetContainer("travelapp", "expenses");
+            _userService = userService;
             _logger = logger;
         }
         public async Task<Expense> AddExpense(Expense expense)
         {
             try
             {
-                var response = await _expenseContainer.CreateItemAsync(expense, new PartitionKey(expense.TripId));
+                expense.UserId = _userService.GetCurrentUserId();
+                var response = await _expenseContainer.CreateItemAsync(expense, new PartitionKey(expense.UserId));
                 return response.Resource;
             }
             catch (CosmosException ex)
@@ -39,11 +42,12 @@ namespace TravelExpenseTracker.Services
                 //return expense;
             }
         }
-        public async Task<Expense?> GetExpenseById(string id, string tripId)
+        public async Task<Expense?> GetExpenseById(string id)
         {
             try
             {
-                var response = await _expenseContainer.ReadItemAsync<Expense>(id, new PartitionKey(tripId));
+                var userId = _userService.GetCurrentUserId();
+                var response = await _expenseContainer.ReadItemAsync<Expense>(id, new PartitionKey(userId));
                 return response.Resource;
             }
             catch (CosmosException ex)
@@ -54,9 +58,11 @@ namespace TravelExpenseTracker.Services
         }
         public async Task<List<Expense>> GetExpensesByTripId(string tripId)
         {
+            var userId = _userService.GetCurrentUserId();
             var expenses = new List<Expense>();
-            var query = new QueryDefinition("Select * from c Where c.tripId = @tripId")
-                .WithParameter("@tripId", tripId);
+            var query = new QueryDefinition("Select * from c Where c.tripId = @tripId and c.userId = @userId")
+                .WithParameter("@tripId", tripId)
+                .WithParameter("@userId", userId);
 
             try
             {
@@ -77,7 +83,8 @@ namespace TravelExpenseTracker.Services
         {
             try
             {
-                var response = await _expenseContainer.UpsertItemAsync(expense, new PartitionKey(expense.TripId));
+                expense.UserId = _userService.GetCurrentUserId();
+                var response = await _expenseContainer.UpsertItemAsync(expense, new PartitionKey(expense.UserId));
                 return true;
             }
             catch (CosmosException ex)
@@ -86,12 +93,14 @@ namespace TravelExpenseTracker.Services
                 return false;
             }
         }
-        public async Task<bool> DeleteExpense(string id, string tripId)
+        public async Task<bool> DeleteExpense(string id)
         {
             try
             {
+                var userId = _userService.GetCurrentUserId();
+                
                 ItemResponse<object> response =
-                    await _expenseContainer.DeleteItemAsync<object>(id, new PartitionKey(tripId));
+                    await _expenseContainer.DeleteItemAsync<object>(id, new PartitionKey(userId));
                 return response.StatusCode == HttpStatusCode.NoContent;
             }
             catch(CosmosException ex)
@@ -103,12 +112,14 @@ namespace TravelExpenseTracker.Services
 
         public async Task<ExpenseSummary> GetExpenseSummary(string tripId)
         {
+            var userId = _userService.GetCurrentUserId();
             decimal total = 0m;
             int totalCount = 0;
             var byCatAmount = new Dictionary<string, decimal>();
             var byCatCount = new Dictionary<string, int>();
-            var query = new QueryDefinition("Select c.amount, c.category from c where c.tripId = @tripId")
-                .WithParameter("@tripId", tripId);
+            var query = new QueryDefinition("Select c.amount, c.category from c where c.tripId = @tripId and c.userId = @userId")
+                .WithParameter("@tripId", tripId)
+                .WithParameter("@userId", userId);
 
             try
             {

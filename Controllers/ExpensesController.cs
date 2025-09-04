@@ -13,8 +13,7 @@ namespace TravelExpenseTracker.Controllers
         private readonly IExpenseService _expenseService;
         private readonly IBlobService _blobService;
         private readonly ILogger<ExpensesController> _logger;
-
-        public string UserID = "user@user.com";
+        
 
         public ExpensesController(ITripService tripService, IExpenseService expenseService, IBlobService blobService, ILogger<ExpensesController> logger)
         {
@@ -31,9 +30,9 @@ namespace TravelExpenseTracker.Controllers
         }
 
         // GET: ExpensesController/Details/5
-        public async Task<ActionResult> Details(string id, string tripId)
+        public async Task<ActionResult> Details(string id)
         {
-            var expense = await _expenseService.GetExpenseById(id.ToString(), tripId );
+            var expense = await _expenseService.GetExpenseById(id.ToString() );
             if (expense == null)  return NotFound();
 
             if (expense.TripId != null)
@@ -41,7 +40,7 @@ namespace TravelExpenseTracker.Controllers
                 if(expense.BlobName != null)
                     expense.BlobUrl = await _blobService.GetFile(nameof(AzureBlobContainers.Receipts), expense.BlobName);
                 
-                var trip = await _tripService.GetTripById(expense.TripId, UserID);
+                var trip = await _tripService.GetTripById(expense.TripId);
                 if (trip != null)
                 {
                     ViewBag.TripName = trip.Name;
@@ -62,7 +61,7 @@ namespace TravelExpenseTracker.Controllers
 
             if (tripid != null)
             {
-                var trip = await _tripService.GetTripById(tripid.ToString(), UserID);
+                var trip = await _tripService.GetTripById(tripid.ToString());
                 if (trip != null)
                 {
                     ViewBag.TripId = trip.Id;
@@ -106,7 +105,7 @@ namespace TravelExpenseTracker.Controllers
         // GET: ExpensesController/Edit/5
         public async Task<ActionResult> Edit(string id, string tripId)
         {
-            var expense = await _expenseService.GetExpenseById(id.ToString(), tripId.ToString());
+            var expense = await _expenseService.GetExpenseById(id.ToString());
             
             if (expense == null) return NotFound();
 
@@ -115,7 +114,7 @@ namespace TravelExpenseTracker.Controllers
                 if(expense.BlobName != null)
                     expense.BlobUrl = await _blobService.GetFile(nameof(AzureBlobContainers.Receipts), expense.BlobName);
                 
-                var trip = await _tripService.GetTripById(expense.TripId.ToString(), UserID);
+                var trip = await _tripService.GetTripById(expense.TripId.ToString());
                 if (trip != null)
                 {
                     ViewBag.TripName = trip.Name;
@@ -174,7 +173,7 @@ namespace TravelExpenseTracker.Controllers
         {
             try
             {
-                var result = await _expenseService.DeleteExpense(id.ToString(), tripId.ToString());
+                var result = await _expenseService.DeleteExpense(id.ToString());
                
             }
             catch(Exception ex)

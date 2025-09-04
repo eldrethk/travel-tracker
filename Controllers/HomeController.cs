@@ -25,7 +25,7 @@ public class HomeController : Controller
     {
         List<TripViewModel> list = new List<TripViewModel>();
 
-        List<Trip> triplist = await _tripService.GetAll();
+        List<Trip> triplist = await _tripService.GetTripsByUserId();
         foreach (Trip trip in triplist) {
             list.Add(new TripViewModel
             {
