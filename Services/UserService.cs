@@ -23,10 +23,15 @@ namespace TravelExpenseTracker.Services
 
             if (user?.Identity?.IsAuthenticated != true) return null;
 
-            return user?.FindFirst(ClaimTypes.NameIdentifier)?.Value
+            /*return user?.FindFirst(ClaimTypes.NameIdentifier)?.Value
                 ?? user?.FindFirst("sub")?.Value
                 ?? user?.FindFirst("oid")?.Value
+                ?? throw new InvalidOperationException("User not authenticated");*/
+            return user?.FindFirst(ClaimTypes.Email)?.Value
+                ?? user?.FindFirst("email")?.Value
+                ?? user?.FindFirst("preferred_username")?.Value
                 ?? throw new InvalidOperationException("User not authenticated");
+
         }
 
         public string GetCurrentUserEmail()
