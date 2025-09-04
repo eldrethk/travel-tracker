@@ -20,7 +20,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
-//.AddMicrosoftIdentityUI();
 
 var authBuilder = builder.Services
     .AddAuthentication(options =>
@@ -34,6 +33,7 @@ var authBuilder = builder.Services
         builder.Configuration.Bind("AzureAd", options);
         options.ResponseType = OpenIdConnectResponseType.Code;
         options.UsePkce = true;
+        options.CallbackPath = "/signin-oidc";
         options.Events = new OpenIdConnectEvents
         {
             OnSignedOutCallbackRedirect = context =>
@@ -52,7 +52,7 @@ var authBuilder = builder.Services
     });
 
 
-
+//global json setting for API responses
 builder.Services.Configure<JsonSerializerOptions>(options =>
 {
     options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
@@ -114,16 +114,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
-
-// Temporary debugging - remove after testing
-var logger = app.Services.GetRequiredService<ILogger<Program>>();
-logger.LogInformation("Authentication schemes registered:");
-var authSchemeProvider = app.Services.GetRequiredService<IAuthenticationSchemeProvider>();
-var schemes = await authSchemeProvider.GetAllSchemesAsync();
-foreach (var scheme in schemes)
-{
-    logger.LogInformation($"Scheme: {scheme.Name}, Handler: {scheme.HandlerType?.Name}");
-}
-
 
 app.Run();
