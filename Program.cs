@@ -21,50 +21,38 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-builder.Services
+var authBuilder = builder.Services
     .AddAuthentication(options =>
     {
         options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
         options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-    })
-    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
-    {
-        options.Authority = $"https://login.microsoftonline.com/{builder.Configuration["AzureAd:TenantId"]}/v2.0";
-        options.ClientId = builder.Configuration["AzureAd:ClientId"];
-        options.ResponseType = OpenIdConnectResponseType.Code;
-        options.CallbackPath = "/signin-oidc";
-        options.SignedOutCallbackPath = "/signout-callback-oidc";
-        options.UsePkce = true;
-
-        // Explicitly remove any client authentication
-        options.ClientSecret = null;
-
-        // Configure scopes
-        options.Scope.Clear();
-        options.Scope.Add("openid");
-        options.Scope.Add("profile");
-        options.Scope.Add("email");
-
-        // Save tokens for later use if needed
-        options.SaveTokens = true;
-
-        options.Events = new OpenIdConnectEvents
-        {
-            OnSignedOutCallbackRedirect = context =>
-            {
-                context.Response.Redirect("/");
-                context.HandleResponse();
-                return Task.CompletedTask;
-            }
-        };
-    })
-    .AddGoogle(options =>
-    {
-        options.ClientId = builder.Configuration["GoogleAuth:ClientId"]!;
-        options.ClientSecret = builder.Configuration["GoogleAuth:ClientSecret"]!;
-        options.CallbackPath = "/signin-google";
     });
+
+//For Microsoft
+authBuilder.AddMicrosoftIdentityWebApp(options =>
+{
+    builder.Configuration.Bind("AzureAd", options);
+    options.ResponseType = OpenIdConnectResponseType.Code;  //ensure code flow
+    options.UsePkce = true;   //good practice
+    options.Events = new OpenIdConnectEvents
+    {
+        OnSignedOutCallbackRedirect = context =>
+        {
+            context.Response.Redirect("/");
+            context.HandleResponse();
+            return Task.CompletedTask;
+        }
+    };
+});
+
+//for Google
+authBuilder.AddGoogle(options =>
+{
+    options.ClientId = builder.Configuration["GoogleAuth:ClientId"]!;
+    options.ClientSecret = builder.Configuration["GoogleAuth:ClientSecret"]!;
+    options.CallbackPath = "/signin-google";
+});
+
 
 
 //global json setting for API responses
