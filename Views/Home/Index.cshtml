@@ -9,7 +9,17 @@
         <h1>Current Trips</h1>
         <a asp-controller="Trips" asp-action="Create" class="btn btn-primary">Add Trip</a>
     </div>
-    <div class="row">
+   
+    <div class="row"> 
+         @if (!Model.Any())
+        {
+        <div class="d-flex justify-content-center w-100">
+            <div class="alert alert-warning text-center w-75">
+                <h4>No Trips Found</h4>
+                <p>Please login to create or view trips!</p>
+            </div>
+        </div>
+        }
         @foreach (TripViewModel item in Model)
         {     
             <div class="col col-xl-4 col-lg-6 col-sm-12 mt-3 mb-3">

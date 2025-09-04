@@ -15,6 +15,9 @@ namespace TravelExpenseTracker.Domain
         [JsonProperty("tripId")]
         public string? TripId { get; set; }
 
+        [JsonProperty("userId")]
+        public string UserId { get; set; } = string.Empty;
+
         [Required]
         [Display(Name = "Company's Name")]
         [JsonProperty("companyName")]

@@ -10,21 +10,23 @@ namespace TravelExpenseTracker.Services
     public interface ITripService
     {
         Task<Trip> AddTrip(Trip trip);
-        Task<Trip?> GetTripById(string id, string userid);
-        //Task<List<Trip>> GetTripsByUserId(string userId);
-        Task<List<Trip>> GetAll();
+        Task<Trip?> GetTripById(string id);
+        Task<List<Trip>> GetTripsByUserId();
+        //Task<List<Trip>> GetAll();
         Task<bool> UpdateTrip(Trip trip);
-        Task<bool> DeleteTrip(string id, string userid);
+        Task<bool> DeleteTrip(string id);
         //Task<ExpenseSummary> GetExpenseSummary(int tripId);
     }
     public class TripService : ITripService
     {
         private readonly Container _tripContainer;
         private readonly IExpenseService _expenseService;
+        private readonly IUserService _userService;
         private readonly ILogger<TripService> _logger;
-        public TripService(CosmosClient cosmosClient, IExpenseService expenseService, ILogger<TripService> logger)
+        public TripService(CosmosClient cosmosClient, IUserService userService, IExpenseService expenseService, ILogger<TripService> logger)
         {
             _tripContainer = cosmosClient.GetContainer("travelapp", "trips");
+            _userService = userService;
             _expenseService = expenseService;
             _logger = logger;
         }
@@ -32,6 +34,7 @@ namespace TravelExpenseTracker.Services
         {
             try
             {
+                trip.UserId = _userService.GetCurrentUserId();
                 var response = await _tripContainer.CreateItemAsync(trip, new PartitionKey(trip.UserId));
                 return response.Resource;
             }
@@ -39,15 +42,16 @@ namespace TravelExpenseTracker.Services
             {
                 _logger.LogError(ex.Message, "CosmosDB error: statuscode= {StatusCode}, Message={Message}");
                 return trip;
-                //throw;
+            
             }
 
         }
-        public async Task<Trip?> GetTripById(string id, string userid)
+        public async Task<Trip?> GetTripById(string id)
         {
             try
             {
-                var response = await _tripContainer.ReadItemAsync<Trip>(id, new PartitionKey(userid));
+                var userId = _userService.GetCurrentUserId();
+                var response = await _tripContainer.ReadItemAsync<Trip>(id, new PartitionKey(userId));
                 var trip = response.Resource;
 
                 trip.Expenses = await _expenseService.GetExpensesByTripId(id);
@@ -59,9 +63,14 @@ namespace TravelExpenseTracker.Services
                 return null;
             }
         }
-        public async Task<List<Trip>> GetTripsByUserId(string userId)
+        public async Task<List<Trip>> GetTripsByUserId()
         {
+            var userId = _userService.GetCurrentUserId();
             var trips = new List<Trip>();
+
+            if (string.IsNullOrEmpty(userId))
+                return trips;
+
             var query = new QueryDefinition("Select * from c Where c.userId = @userId")
                 .WithParameter("@userId", userId);
             try
@@ -81,7 +90,7 @@ namespace TravelExpenseTracker.Services
 
             return trips;
         }
-        public async Task<List<Trip>> GetAll()
+        /*public async Task<List<Trip>> GetAll()
         {
             var trips = new List<Trip>();
             var query = new QueryDefinition("Select * from c");
@@ -102,11 +111,12 @@ namespace TravelExpenseTracker.Services
             }
 
             return trips;
-        }
+        }*/
         public async Task<bool> UpdateTrip(Trip trip)
         {
             try
             {
+                trip.UserId = _userService.GetCurrentUserId();
                 var response = await _tripContainer.UpsertItemAsync(trip, new PartitionKey(trip.UserId));
                 return true;
             }
@@ -116,10 +126,11 @@ namespace TravelExpenseTracker.Services
                 return false;
             }
         }
-        public async Task<bool> DeleteTrip(string id, string userId)
+        public async Task<bool> DeleteTrip(string id)
         {
             try
             {
+                var userId = _userService.GetCurrentUserId();
                 ItemResponse<object> resp =
                 await _tripContainer.DeleteItemAsync<object>(id, new PartitionKey(userId));
                 return resp.StatusCode == HttpStatusCode.NoContent;
@@ -130,24 +141,7 @@ namespace TravelExpenseTracker.Services
                 return false;
             }
         }
-        /*public async Task<ExpenseSummary> GetExpenseSummary(int tripId)
-        {
-            var expenses = await _context.Expenses.Where(e => e.TripId == tripId).ToListAsync();
-            var summary = new ExpenseSummary
-            {
-                TotalAmount = expenses.Sum(e => e.Amount),
-                TotalExpenses = expenses.Count,
-                CategoryBreakdown = expenses
-                    .GroupBy(e => e.Category.ToString())
-                    .ToDictionary(g => g.Key, g => g.Sum(e => e.Amount)),                    
-                CategoryCounts = expenses
-                    .GroupBy(e => e.Category.ToString())
-                    .ToDictionary(g => g.Key, g => g.Count())
-
-            };
-            return summary;
-        }*/
-
+      
      
     }
 }

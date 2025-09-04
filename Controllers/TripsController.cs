@@ -14,8 +14,6 @@ namespace TravelExpenseTracker.Controllers
         private readonly ITripService _tripService;
         private readonly IExpenseService _expenseService;
 
-        public string UserID = "user@user.com";
-
         public TripsController(ITripService tripService, ILogger<TripsController> logger, IExpenseService expenseService)
         {
             _logger = logger;
@@ -25,7 +23,7 @@ namespace TravelExpenseTracker.Controllers
         // GET: TripsController
         public async Task<ActionResult> Index()
         {
-            var trips = await _tripService.GetAll();
+            var trips = await _tripService.GetTripsByUserId();
             var tripViewModel = new List<TripViewModel>();
             foreach (var trip in trips)
             {
@@ -43,7 +41,7 @@ namespace TravelExpenseTracker.Controllers
         {
             TripViewModel model = new TripViewModel
             {
-                Trip = await _tripService.GetTripById(id.ToString(), UserID),
+                Trip = await _tripService.GetTripById(id.ToString()),
                 Expenses = await _expenseService.GetExpensesByTripId(id.ToString()),
                 ExpenseSummary = await _expenseService.GetExpenseSummary(id.ToString())
             };
@@ -68,14 +66,14 @@ namespace TravelExpenseTracker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(Trip trip)
         {
-            trip.UserId = UserID;
+
+            //Trip Services ensures user's authentication details    
             ModelState.Remove("UserId");
 
             if (ModelState.IsValid)
             { 
                 try
                 {
-                    //need to assign currentuser() to UserId
                     await _tripService.AddTrip(trip);
                     return RedirectToAction("Index", "Home");                        
                 }
@@ -91,7 +89,7 @@ namespace TravelExpenseTracker.Controllers
         // GET: TripsController/Edit/5
         public async Task<ActionResult> Edit(string id)
         {           
-            Trip trip = await _tripService.GetTripById(id, UserID);
+            Trip trip = await _tripService.GetTripById(id);
             
             if (trip == null)
                 return NotFound();
@@ -130,7 +128,7 @@ namespace TravelExpenseTracker.Controllers
         {
             try
             {
-                var result = await _tripService.DeleteTrip(id, UserID);
+                var result = await _tripService.DeleteTrip(id);
 
             }
             catch (Exception ex)

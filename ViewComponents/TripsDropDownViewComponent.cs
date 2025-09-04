@@ -15,7 +15,7 @@ namespace TravelExpenseTracker.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync()
         {
             //var UserId = GetCurrentUserId();
-            var trips = await _tripService.GetAll();
+            var trips = await _tripService.GetTripsByUserId();
             return View(trips.Take(10).OrderByDescending(t => t.StartDate).ToList());
         }
     }
