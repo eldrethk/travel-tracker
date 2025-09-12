@@ -50,7 +50,7 @@ namespace TravelExpenseTracker.Controllers
         public override SignOutResult SignOut(AuthenticationProperties properties)
         {
             properties.RedirectUri = Url.Content("~/"); // after the IdP calls back to /signout-callback-oidc
-            return base.SignOut(properties);
+            return base.SignOut(properties, CookieAuthenticationDefaults.AuthenticationScheme, OpenIdConnectDefaults.AuthenticationScheme);
         }
      
 
