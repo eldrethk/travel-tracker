@@ -47,6 +47,12 @@ namespace TravelExpenseTracker.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+        public override SignOutResult SignOut(AuthenticationProperties properties)
+        {
+            properties.RedirectUri = Url.Content("~/"); // after the IdP calls back to /signout-callback-oidc
+            return base.SignOut(properties);
+        }
+     
 
     }
 }
