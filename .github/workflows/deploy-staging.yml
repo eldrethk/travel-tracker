@@ -1,43 +1,43 @@
 ﻿name: Deploy to Stage
 
-on:
-  push:
-    branches: [ main ] # Change to 'develop' if you want a separate branch for staging
-  workflow_dispatch: # Allows manual triggering
+# on:
+#   push:
+#     branches: [ main ] Change to 'develop' if you want a separate branch for staging
+#   workflow_dispatch: Allows manual triggering
 
-env:
-  AZURE_WEBAPP_NAME: 'traveltracker' # Replace with your actual app service name
-  AZURE_WEBAPP_PACKAGE_PATH: '.'
-  DOTNET_VERSION: '9.0' # Adjust to your .NET version
+# env:
+#   AZURE_WEBAPP_NAME: 'traveltracker' Replace with your actual app service name
+#   AZURE_WEBAPP_PACKAGE_PATH: '.'
+#   DOTNET_VERSION: '9.0' Adjust to your .NET version
 
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   build-and-deploy:
+#     runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v4
+#     steps:
+#     - uses: actions/checkout@v4
 
-    - name: Set up .NET Core
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
+#     - name: Set up .NET Core
+#       uses: actions/setup-dotnet@v3
+#       with:
+#         dotnet-version: ${{ env.DOTNET_VERSION }}
 
-    - name: Restore dependencies
-      run: dotnet restore
+#     - name: Restore dependencies
+#       run: dotnet restore
 
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
+#     - name: Build
+#       run: dotnet build --configuration Release --no-restore
 
-    - name: Test
-      run: dotnet test --no-restore --verbosity normal
+#     - name: Test
+#       run: dotnet test --no-restore --verbosity normal
 
-    - name: Publish
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+#     - name: Publish
+#       run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
-    - name: Deploy to Azure Web App (Stage Slot)
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        slot-name: Stage # This matches your slot name
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_STAGING }}
-        package: ${{env.DOTNET_ROOT}}/myapp
+#     - name: Deploy to Azure Web App (Stage Slot)
+#       uses: azure/webapps-deploy@v2
+#       with:
+#         app-name: ${{ env.AZURE_WEBAPP_NAME }}
+#         slot-name: Stage This matches your slot name
+#         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_STAGING }}
+#         package: ${{env.DOTNET_ROOT}}/myapp
