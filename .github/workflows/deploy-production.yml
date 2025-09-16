@@ -3,29 +3,41 @@ name: Deploy to Production
 on:
   push:
     branches: [ prod ]
+  workflow_dispatch: # Allows manual triggering
+
+env:
+  AZURE_WEBAPP_NAME: 'traveltracker-czbvf3bme6ckgags' # Your actual app name
+  AZURE_WEBAPP_PACKAGE_PATH: '.'
+  DOTNET_VERSION: '9.0' # Adjust to your .NET version
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v4
-    
-    - name: Set up Node.js (adjust version as needed)
-      uses: actions/setup-node@v4
+
+    - name: Set up .NET Core
+      uses: actions/setup-dotnet@v3
       with:
-        node-version: '18'
-        
-    - name: Install dependencies
-      run: npm install
-      
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Restore dependencies
+      run: dotnet restore
+
     - name: Build
-      run: npm run build
-      
-    - name: Deploy to Azure Production Slot
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal
+
+    - name: Publish
+      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+
+    - name: Deploy to Azure Web App (Production)
       uses: azure/webapps-deploy@v2
       with:
-        app-name: 'your-app-name'
-        slot-name: 'production'  # or leave empty if deploying to main production slot
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        # Leave slot-name empty for main production slot
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_PRODUCTION }}
-        package: .
+        package: ${{env.DOTNET_ROOT}}/myapp
