@@ -6,7 +6,7 @@ on:
   workflow_dispatch: # Allows manual triggering
 
 env:
-  AZURE_WEBAPP_NAME: 'traveltracker-czbvf3bme6ckgags' # Your actual app name
+  AZURE_WEBAPP_NAME: 'traveltracker' # Your actual app name
   AZURE_WEBAPP_PACKAGE_PATH: '.'
   DOTNET_VERSION: '9.0' # Adjust to your .NET version
 
