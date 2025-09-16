@@ -45,40 +45,6 @@ builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
 
 builder.Services.AddAuthorization();
 
-/*var authBuilder = builder.Services
-    .AddAuthentication(options =>
-    {
-        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-    });
-
-//For Microsoft
-authBuilder.AddMicrosoftIdentityWebApp(options =>
-{
-    builder.Configuration.Bind("AzureAd", options);
-    options.ResponseType = OpenIdConnectResponseType.Code;  //ensure code flow
-    options.UsePkce = true;   //good practice
-    options.Events = new OpenIdConnectEvents
-    {
-        OnSignedOutCallbackRedirect = context =>
-        {
-            context.Response.Redirect("/");
-            context.HandleResponse();
-            return Task.CompletedTask;
-        }
-    };
-});
-
-//for Google
-authBuilder.AddGoogle(options =>
-{
-    options.ClientId = builder.Configuration["GoogleAuth:ClientId"]!;
-    options.ClientSecret = builder.Configuration["GoogleAuth:ClientSecret"]!;
-    options.CallbackPath = "/signin-google";
-});*/
-
-
-
 //global json setting for API responses
 builder.Services.Configure<JsonSerializerOptions>(options =>
 {
@@ -126,12 +92,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-// If you’re behind Azure App Service’s proxy, forward headers is nice to have:
-app.Use((ctx, next) =>
-{
-    ctx.Request.Scheme = "https"; // ensures callbacks build as https on Azure
-    return next();
-});
 
 app.UseAuthentication();
 app.UseAuthorization();
