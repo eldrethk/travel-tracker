@@ -98,9 +98,9 @@ app.UseRouting();
 //app.UseAuthorization();
 app.MapStaticAssets();
 
-/*app.MapGet("/", async context => {
+app.MapGet("/", async context => {
     context.Response.Redirect("/Home");
-});*/
+});
 
 app.MapControllerRoute(
     name: "default",
