@@ -20,9 +20,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
-
-
 /*builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme);
     .AddMicrosoftIdentityWebApp(options =>
     {
@@ -97,13 +94,13 @@ app.UseStaticFiles();
 app.UseRouting();
 
 
-app.UseAuthentication();
-app.UseAuthorization();
+//app.UseAuthentication();
+//app.UseAuthorization();
 app.MapStaticAssets();
 
-app.MapGet("/", async context => {
+/*app.MapGet("/", async context => {
     context.Response.Redirect("/Home");
-});
+});*/
 
 app.MapControllerRoute(
     name: "default",
