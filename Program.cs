@@ -42,9 +42,12 @@ var builder = WebApplication.CreateBuilder(args);
     });.EnableTokenAcquisitionToCallDownstreamApi()
       .AddInMemoryTokenCaches();*/
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
 
-//builder.Services.AddAuthorization();
+builder.Services.AddControllersWithViews(). AddMicrosoftIdentityUI();
+
+builder.Services.AddAuthorization();
 
 //global json setting for API responses
 builder.Services.Configure<JsonSerializerOptions>(options =>
@@ -94,8 +97,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 
-//app.UseAuthentication();
-//app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapStaticAssets();
 
 app.MapGet("/", () => Results.Redirect("/Home"));
