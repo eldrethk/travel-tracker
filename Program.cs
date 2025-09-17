@@ -28,18 +28,18 @@ builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     {
         builder.Configuration.Bind("AzureAd", options);
         options.SignedOutCallbackPath = "/signout-callback-oidc";
-        options.Events = new OpenIdConnectEvents 
-        { 
-            OnRedirectToIdentityProviderForSignOut = context => 
-            { 
-                context.ProtocolMessage.PostLogoutRedirectUri = context.Request.Scheme + "://" + context.Request.Host + "/"; 
-                context.ProtocolMessage.Parameters.Add("logout_hint", context.HttpContext.User?.Identity?.Name); 
-                return Task.CompletedTask; 
-            } 
+        options.Events = new OpenIdConnectEvents
+        {
+            OnRedirectToIdentityProviderForSignOut = context =>
+            {
+                context.ProtocolMessage.PostLogoutRedirectUri = context.Request.Scheme + "://" + context.Request.Host + "/";
+                context.ProtocolMessage.Parameters.Add("logout_hint", context.HttpContext.User?.Identity?.Name);
+                return Task.CompletedTask;
+            }
         };
 
-    }).EnableTokenAcquisitionToCallDownstreamApi()
-      .AddInMemoryTokenCaches();
+    });//.EnableTokenAcquisitionToCallDownstreamApi()
+      //.AddInMemoryTokenCaches();
 
 builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
 
