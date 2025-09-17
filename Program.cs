@@ -27,6 +27,10 @@ builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApp(options =>
     {
         builder.Configuration.Bind("AzureAd", options);
+        //force auth code flow
+        options.ResponseType = OpenIdConnectResponseType.Code;
+        options.SaveTokens = true;
+        options.UsePkce = true;
         options.SignedOutCallbackPath = "/signout-callback-oidc";
         options.Events = new OpenIdConnectEvents
         {
