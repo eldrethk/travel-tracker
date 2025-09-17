@@ -23,7 +23,7 @@ var builder = WebApplication.CreateBuilder(args);
 JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
 
-builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+/*builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme);
     .AddMicrosoftIdentityWebApp(options =>
     {
         builder.Configuration.Bind("AzureAd", options);
@@ -42,12 +42,12 @@ builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
             }
         };
 
-    });//.EnableTokenAcquisitionToCallDownstreamApi()
-      //.AddInMemoryTokenCaches();
+    });.EnableTokenAcquisitionToCallDownstreamApi()
+      .AddInMemoryTokenCaches();*/
 
-builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
+builder.Services.AddControllersWithViews();
 
-builder.Services.AddAuthorization();
+//builder.Services.AddAuthorization();
 
 //global json setting for API responses
 builder.Services.Configure<JsonSerializerOptions>(options =>
