@@ -21,6 +21,9 @@ public class HomeController : Controller
         _expenseService = expenseService;
     }
 
+    [Route("")]
+    [Route("Home")]
+    [Route("Home/Index")]
     public async Task<IActionResult> Index()
     {
         List<TripViewModel> list = new List<TripViewModel>();
