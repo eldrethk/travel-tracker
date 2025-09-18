@@ -20,15 +20,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-/*builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme);
+
+builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApp(options =>
     {
         builder.Configuration.Bind("AzureAd", options);
-        //force auth code flow
-        options.ResponseType = OpenIdConnectResponseType.Code;
-        options.SaveTokens = true;
-        options.UsePkce = true;
-        options.SignedOutCallbackPath = "/signout-callback-oidc";
         options.Events = new OpenIdConnectEvents
         {
             OnRedirectToIdentityProviderForSignOut = context =>
@@ -38,12 +34,8 @@ var builder = WebApplication.CreateBuilder(args);
                 return Task.CompletedTask;
             }
         };
-
-    });.EnableTokenAcquisitionToCallDownstreamApi()
-      .AddInMemoryTokenCaches();*/
-
-builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
+    });
+  
 
 builder.Services.AddControllersWithViews(). AddMicrosoftIdentityUI();
 
