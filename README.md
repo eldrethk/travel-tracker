@@ -5,6 +5,10 @@ Built with ASP.NET Core 9.0 MVC and deployed on Azure App Service with automated
 
 ---
 
+### 🔗 Live Demo:** https://traveltracker-czbvf3bme6ckgags.eastus2-01.azurewebsites.net/
+
+---
+
 ### 🎥 Demo
 
 
@@ -34,7 +38,14 @@ This demo shows creating a trip, adding expenses with receipt uploads, and viewi
 - File Storage	Azure Blob Storage
 - Hosting	Azure App Service
 - CI/CD	GitHub Actions
-- Authentication	Anonymous (extensible)
+- Authentication: Microsoft Entra External ID with multi-provider support (Microsoft accounts + email OTP)
+
+---
+
+### 🚀 Deployment
+- **GitHub Actions CI/CD** – Automated deployment pipeline with staging and production workflows
+- **Azure App Service** – Production hosting with deployment slot management
+- **Environment Configuration** – Separate staging and production configurations
 
 ---
 
@@ -70,3 +81,4 @@ You may **not use, copy, modify, merge, publish, distribute, sublicense, or sell
 
 No permission is granted to use this code in any software or system, commercial or non-commercial.
 No permission is granted to copy, distribute, or modify this work without explicit written consent.  
+
