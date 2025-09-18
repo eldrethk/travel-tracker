@@ -5,7 +5,7 @@ Built with ASP.NET Core 9.0 MVC and deployed on Azure App Service with automated
 
 ---
 
-### 🔗 Live Demo:** https://traveltracker-czbvf3bme6ckgags.eastus2-01.azurewebsites.net/
+### 🔗 Live Demo: [https://traveltracker-czbvf3bme6ckgags.eastus2-01.azurewebsites.net/](https://traveltracker-czbvf3bme6ckgags.eastus2-01.azurewebsites.net/)
 
 ---
 
@@ -71,7 +71,17 @@ This demo shows creating a trip, adding expenses with receipt uploads, and viewi
 
 - **ExpenseCategory** – Enum for expense categorization
 
-  ---
+#### Authentication Flow
+- **Microsoft Entra External ID** – Customer identity and access management
+- **Multi-provider Support** – Microsoft accounts and email one-time passcode
+- **External User Registration** – Public user signup without organizational accounts
+
+#### Cloud Integration
+- **Connection String Management** – Secure configuration for Azure services
+- **Blob Container Organization** – User-scoped file storage with container resolution
+- **Cosmos DB Partitioning** – Efficient data organization by user and trip
+
+ ---
 
 ### 📄 License
 Copyright 2025 Karla Cooper  
@@ -81,4 +91,5 @@ You may **not use, copy, modify, merge, publish, distribute, sublicense, or sell
 
 No permission is granted to use this code in any software or system, commercial or non-commercial.
 No permission is granted to copy, distribute, or modify this work without explicit written consent.  
+
 
